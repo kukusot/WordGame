@@ -1,5 +1,7 @@
 package com.kukusot.wordgame.di
 
+import android.content.res.AssetManager
+import com.google.gson.Gson
 import com.kukusot.wordgame.data.WordsDataSource
 import com.kukusot.wordgame.data.WordsLocalDataSource
 import com.kukusot.wordgame.domain.WordsRepository
@@ -8,24 +10,30 @@ import com.kukusot.wordgame.usecase.GameManager
 import com.kukusot.wordgame.usecase.GameManagerImpl
 import com.kukusot.wordgame.usecase.QuestionFactory
 import com.kukusot.wordgame.usecase.QuestionFactoryImpl
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.FragmentComponent
 
-@InstallIn(ActivityComponent::class)
+@InstallIn(FragmentComponent::class)
 @Module
-abstract class GameModule {
+class GameModule {
 
-    @Binds
-    abstract fun bindWordsDataSource(dataSource: WordsLocalDataSource): WordsDataSource
+    @Provides
+    fun provideWordsDataSource(assetManager: AssetManager, gson: Gson): WordsDataSource =
+        WordsLocalDataSource(assetManager, gson)
 
-    @Binds
-    abstract fun bindWordsRepository(repositoryImpl: WordsRepositoryImpl): WordsRepository
+    @Provides
+    fun provideWordsRepository(wordsDataSource: WordsDataSource): WordsRepository =
+        WordsRepositoryImpl(wordsDataSource)
 
-    @Binds
-    abstract fun bindQuestionFactory(factory: QuestionFactoryImpl): QuestionFactory
+    @Provides
+    fun provideQuestionFactory(wordsRepository: WordsRepository): QuestionFactory =
+        QuestionFactoryImpl(wordsRepository)
 
-    @Binds
-    abstract fun bindGameManager(gameManager: GameManagerImpl): GameManager
+    @Provides
+    fun provideGameManager(
+        repository: WordsRepository,
+        questionFactory: QuestionFactory
+    ): GameManager = GameManagerImpl(questionFactory, repository)
 }

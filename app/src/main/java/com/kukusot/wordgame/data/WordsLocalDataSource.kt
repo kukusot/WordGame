@@ -3,9 +3,8 @@ package com.kukusot.wordgame.data
 import android.content.res.AssetManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import javax.inject.Inject
 
-class WordsLocalDataSource @Inject constructor(
+class WordsLocalDataSource constructor(
     private val assetManager: AssetManager,
     private val gson: Gson
 ) : WordsDataSource {

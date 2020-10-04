@@ -1,9 +1,8 @@
 package com.kukusot.wordgame.domain
 
 import com.kukusot.wordgame.data.WordsDataSource
-import javax.inject.Inject
 
-class WordsRepositoryImpl @Inject constructor(private val wordsDataSource: WordsDataSource) :
+class WordsRepositoryImpl(private val wordsDataSource: WordsDataSource) :
     WordsRepository {
 
     private var cachedWords: List<Word>? = null

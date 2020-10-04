@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="game_content_big_margin">32dp</dimen>
+    <dimen name="game_small_margin">16dp</dimen>
+    <dimen name="game_text_size">22sp</dimen>
+    <dimen name="counter_size">40sp</dimen>
+</resources>
