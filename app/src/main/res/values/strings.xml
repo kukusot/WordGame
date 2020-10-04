@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WordGame</string>
+    <string name="start">Start</string>
+    <string name="correct">Correct!</string>
+    <string name="wrong">Wrong!</string>
+    <string name="score">Score: %s</string>
 </resources>
