@@ -15,7 +15,7 @@
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/counterText"
         tools:text="Food" />
 
     <TextView
@@ -37,7 +37,7 @@
         android:layout_marginEnd="@dimen/game_content_big_margin"
         android:textSize="@dimen/counter_size"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/englishText"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="4" />
 
     <TextView
@@ -47,7 +47,7 @@
         android:layout_marginStart="@dimen/game_content_big_margin"
         android:textSize="@dimen/score_text_size"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/englishText"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="4" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -127,5 +127,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/gameControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="correctButton, wrongButton, englishText, spanishText, counterText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

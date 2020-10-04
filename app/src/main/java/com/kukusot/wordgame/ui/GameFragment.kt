@@ -10,15 +10,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.kukusot.wordgame.R
+import com.kukusot.wordgame.sound.SoundManager
 import com.kukusot.wordgame.ui.data.AnswerState
 import com.kukusot.wordgame.ui.data.GameState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_game.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class GameFragment : Fragment() {
 
     private val viewModel: GameViewModel by viewModels()
+
+    @Inject
+    lateinit var soundManager: SoundManager
     private var runningAnimation: Animator? = null
 
     override fun onCreateView(
@@ -59,9 +64,13 @@ class GameFragment : Fragment() {
             })
 
             scoreData.observe(viewLifecycleOwner, Observer { state ->
-                showScore(state.scoreText)
+                scoreText.text = getString(R.string.score, state.scoreText)
                 when (state.answerState) {
-                    AnswerState.CORRECT -> correctText.scaleOut()
+                    AnswerState.CORRECT -> {
+                        correctText.scaleOut()
+                        scoreText.bounceAround()
+                        soundManager.playWin()
+                    }
                     AnswerState.WRONG -> wrongText.scaleOut()
                     else -> {
                         // Do nothing
@@ -71,32 +80,25 @@ class GameFragment : Fragment() {
         }
 
         wrongButton.setOnClickListener {
-            cancelRunningAnimations()
+            runningAnimation?.cancel()
             viewModel.answer(false)
         }
 
         correctButton.setOnClickListener {
-            cancelRunningAnimations()
+            runningAnimation?.cancel()
             viewModel.answer(true)
         }
     }
 
-    private fun showScore(score: String) {
-        scoreText.text = getString(R.string.score, score)
-    }
-
     override fun onPause() {
         super.onPause()
+        runningAnimation?.cancel()
         viewModel.onGameInBackground()
-        cancelRunningAnimations()
     }
 
     private fun showGameIsPlaying(state: GameState.Playing) {
         startGameButton.isVisible = false
-        correctButton.isVisible = true
-        wrongButton.isVisible = true
-        spanishText.isVisible = true
-        englishText.isVisible = true
+        gameControls.isVisible = true
 
         englishText.text = state.engText
         spanishText.text = state.spanishText
@@ -106,23 +108,14 @@ class GameFragment : Fragment() {
 
     private fun showGameStartReady() {
         progress.isVisible = false
+        gameControls.isVisible = false
         startGameButton.isVisible = true
     }
 
     private fun showGameLoading() {
-        englishText.isVisible = false
-        spanishText.isVisible = false
-        correctButton.isVisible = false
-        wrongButton.isVisible = false
         progress.isVisible = true
+        gameControls.isVisible = false
         startGameButton.isVisible = false
-    }
-
-    private fun cancelRunningAnimations() {
-        runningAnimation?.apply {
-            removeAllListeners()
-            cancel()
-        }
     }
 
 }
