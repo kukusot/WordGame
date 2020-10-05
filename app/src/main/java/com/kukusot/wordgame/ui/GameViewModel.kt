@@ -77,6 +77,18 @@ class GameViewModel @ViewModelInject constructor(
                 _gameState.value = GameState.Playing(it.engText, it.spanishText)
             }
             startCounter()
+        }else {
+            // Ideally show game over. For a quick implementation we will generate new questions without a visual feedback
+            generateQuestionsAndGoToNext()
+        }
+    }
+
+    private fun generateQuestionsAndGoToNext() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                gameManager.generateQuestions()
+            }
+            goToNextQuestion()
         }
     }
 
