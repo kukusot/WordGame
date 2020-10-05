@@ -11,7 +11,6 @@ import com.kukusot.wordgame.scores.HighScoresRepository
 import com.kukusot.wordgame.scores.PrefsHighScoreRepository
 import com.kukusot.wordgame.usecase.GameManager
 import com.kukusot.wordgame.usecase.GameManagerImpl
-import com.kukusot.wordgame.usecase.QuestionFactory
 import com.kukusot.wordgame.usecase.QuestionFactoryImpl
 import dagger.Module
 import dagger.Provides
@@ -32,14 +31,9 @@ class GameModule {
         WordsRepositoryImpl(wordsDataSource)
 
     @Provides
-    fun provideQuestionFactory(wordsRepository: WordsRepository): QuestionFactory =
-        QuestionFactoryImpl(wordsRepository)
-
-    @Provides
     fun provideGameManager(
-        repository: WordsRepository,
-        questionFactory: QuestionFactory
-    ): GameManager = GameManagerImpl(questionFactory, repository)
+        repository: WordsRepository
+    ): GameManager = GameManagerImpl(QuestionFactoryImpl(), repository)
 
     @Provides
     fun provideHighScoreRepository(@ApplicationContext context: Context): HighScoresRepository {

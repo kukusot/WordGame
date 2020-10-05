@@ -1,14 +1,14 @@
 package com.kukusot.wordgame.usecase
 
 import com.kukusot.wordgame.domain.Word
-import com.kukusot.wordgame.domain.WordsRepository
+import javax.inject.Inject
 import kotlin.random.Random
 
-class QuestionFactoryImpl(private val repository: WordsRepository) : QuestionFactory {
+class QuestionFactoryImpl @Inject constructor() : QuestionFactory {
 
     override suspend fun createQuestions(words: List<Word>): List<GameQuestion> {
         val gameWords = mutableListOf<Word>().apply {
-            addAll(repository.getWords())
+            addAll(words)
             shuffle()
         }
 

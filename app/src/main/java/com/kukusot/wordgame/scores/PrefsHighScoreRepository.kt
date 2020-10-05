@@ -1,6 +1,7 @@
 package com.kukusot.wordgame.scores
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 class PrefsHighScoreRepository(private val prefs: SharedPreferences) : HighScoresRepository {
 
@@ -8,7 +9,9 @@ class PrefsHighScoreRepository(private val prefs: SharedPreferences) : HighScore
 
     override fun modifyScore(diff: Int): Int {
         val score = getHighScore() + diff
-        prefs.edit().putInt(HIGH_SCORE_NAME, score).apply()
+        prefs.edit {
+            putInt(HIGH_SCORE_NAME, score)
+        }
         currentScore = score
         return currentScore
     }

@@ -1,6 +1,5 @@
 package com.kukusot.wordgame.usecase
 
-import androidx.annotation.VisibleForTesting
 import com.kukusot.wordgame.domain.WordsRepository
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -11,12 +10,7 @@ class GameManagerImpl @Inject constructor(
 ) : GameManager {
 
     private val currentIndex = AtomicInteger(-1)
-    private var questions: MutableList<GameQuestion> = arrayListOf()
-
-    @VisibleForTesting
-    fun setQuestions(questions: MutableList<GameQuestion>) {
-        this.questions = questions
-    }
+    private val questions: MutableList<GameQuestion> = arrayListOf()
 
     override fun hasNext(): Boolean {
         return questions.isNotEmpty() && currentIndex.get() < questions.size - 1
