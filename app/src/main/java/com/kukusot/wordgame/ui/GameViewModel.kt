@@ -20,7 +20,7 @@ class GameViewModel @ViewModelInject constructor(
     ViewModel() {
 
     private var counterJob: Job? = null
-    private var currentQuestion: GameQuestion? = null
+    internal var currentQuestion: GameQuestion? = null
 
     private val _counterData = MutableLiveData<String>()
     val counterData: LiveData<String> = _counterData
@@ -43,23 +43,6 @@ class GameViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun onAnswer(state: AnswerState) {
-        val pointsDiff = if (state == AnswerState.CORRECT) {
-            WON_POINTS_PER_QUESTION
-        } else {
-            LOST_POINTS_PER_QUESTION
-        }
-
-        val currentScore = scoresRepository.modifyScore(pointsDiff)
-        _scoreData.value = ScoreState(currentScore.toString(), state)
-        goToNextQuestion()
-    }
-
-    fun onGameInBackground() {
-        counterJob?.cancel()
-        _gameState.value = GameState.Ready
-    }
-
     fun startGame() {
         goToNextQuestion()
     }
@@ -74,6 +57,18 @@ class GameViewModel @ViewModelInject constructor(
         }
     }
 
+    private fun onAnswer(state: AnswerState) {
+        val pointsDiff = if (state == AnswerState.CORRECT) {
+            WON_POINTS_PER_QUESTION
+        } else {
+            LOST_POINTS_PER_QUESTION
+        }
+
+        val currentScore = scoresRepository.modifyScore(pointsDiff)
+        _scoreData.value = ScoreState(currentScore.toString(), state)
+        goToNextQuestion()
+    }
+
     private fun goToNextQuestion() {
         counterJob?.cancel()
         if (gameManager.hasNext()) {
@@ -85,10 +80,15 @@ class GameViewModel @ViewModelInject constructor(
         }
     }
 
+    fun onGameInBackground() {
+        counterJob?.cancel()
+        _gameState.value = GameState.Ready
+    }
+
     private fun startCounter() {
         counterJob?.cancel()
 
-        var counter = 5
+        var counter = DROP_SECONDS
         counterJob = viewModelScope.launch {
             _counterData.value = counter.toString()
             while (counter > 0) {
@@ -103,6 +103,7 @@ class GameViewModel @ViewModelInject constructor(
     companion object {
         const val WON_POINTS_PER_QUESTION = 1
         const val LOST_POINTS_PER_QUESTION = -2
+        const val DROP_SECONDS = 5
     }
 
 }
